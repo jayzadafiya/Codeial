@@ -7,4 +7,7 @@ console.log("router loaded");
 // similar to app.use we call contorller here
 Router.get("/", homeController.home);
 
+// for any further router access from here
+Router.use("/users",require("./users"))
+
 module.exports = Router;    
