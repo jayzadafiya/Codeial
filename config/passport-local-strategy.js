@@ -1,0 +1,61 @@
+const passport = require("passport");
+const LocalStrategy = require("passport-local").Strategy;
+
+const User = require("../models/user");
+
+//authentication using passport
+passport.use(new LocalStrategy({
+    usernameField: 'email'
+}, 
+    async function(email, password, done) {
+        //find user and establish the identity
+        try{
+            const user = await User.findOne({ email:email});
+
+            if(!user ||user.password !== password){
+                console.log("Invalid Username/Password");
+                return done(null ,false);
+                // 2 parameter : 1. error 2.authentication 
+            }
+            return done(null ,user);
+        }catch(err){
+            console.log("error in finding user");
+            return done();
+        }
+    
+}
+));
+
+//searialzing the user to decide which key is to be kept in the cookies
+passport.serializeUser(function(user,done){
+    done(null ,user.id);   
+});
+
+//deserialzing user from the key in the cookies
+passport.deserializeUser(async function(id,done){
+    try{
+  const user = await User.findById(id);
+
+        if (!user) {
+            return done(null, false);
+        }
+
+        return done(null, user);
+    }catch(err){
+        console.log('Error in finding user --> Passport');
+        return done(err);
+    }
+  
+})
+
+// // 1. authentication of user and sign in 
+// // 2. find id and set into cookies and send cookies to browser (serializing)
+// // 3. when browser make request of user it will fatch user from cookies
+
+
+module.exports = passport;
+
+
+
+
+// module.exports = passport;
