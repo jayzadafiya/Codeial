@@ -15,6 +15,7 @@ router.post('/create-session', passport.authenticate(
     { failureRedirect: '/users/sign-in' },
 ), usersController.createSession);
 
+router.get('/sign-out',usersController.destroySession)
 // if authenticayion is done them it will call createSession page
 // but if it is not done then redirect to sign in page 
 
