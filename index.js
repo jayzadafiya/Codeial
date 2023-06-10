@@ -30,8 +30,8 @@ app.use(session({
     name: 'codeial',
     // TODO change the secret before deployment in production mode
     secret: 'blahsomething',
-    saveUninitialized: false,
-    resave: false,
+    saveUninitialized: false,//if user is not login then dont't save , use data 
+    resave: false,// id data not change then don't save gain and again 
     cookie: {
         maxAge: (1000 * 60 * 100)
     }
@@ -39,6 +39,9 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+//whwnever any resuqst coming it is will check this setaythenticaedUser function 
+app.use(passport.setAuthenticatedUser);
 
 // use express router
 app.use('/', require('./routes'));
