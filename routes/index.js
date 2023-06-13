@@ -10,4 +10,6 @@ Router.get("/", homeController.home);
 // for any further router access from here
 Router.use("/users",require("./users"))
 
+Router.use("/posts",require("./posts"));
+
 module.exports = Router;    
