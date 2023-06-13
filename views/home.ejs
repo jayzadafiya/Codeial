@@ -19,7 +19,20 @@
 <section id="feed-post">
     <h4>Posts</h4>
     <form action="/posts/create" id="new-post-form" method="post">
-        <textarea name="content" cols="30" rows="3"  placeholder="Type Here..."></textarea>
+        <textarea name="content" cols="30" rows="3" placeholder="Type Here..."></textarea>
         <input type="submit" value="submit">
     </form>
+    <div id="posts-list-container">
+        <ul>
+            <% for(post of posts){%>
+                <li>
+                    <%= post.content %>
+                </li>
+                <small>
+                    <!-- <%= post.user %> -->
+                    <%= post.user.name %>
+                </small>
+                <% } %>
+        </ul>
+    </div>
 </section>
