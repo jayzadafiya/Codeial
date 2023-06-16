@@ -8,4 +8,6 @@ const postsController = require("../controllers/posts_controller")
 // stop user for make change in code with inspect mode 
 router.post("/create",passport.checkAuthentication, postsController.create);
 
+router.get("/destroy/:id",passport.checkAuthentication, postsController.destroy);
+
 module.exports = router;
