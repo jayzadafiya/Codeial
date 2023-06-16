@@ -72,8 +72,3 @@ passport.setAuthenticatedUser = function(req,res,next){
 // // 3. when browser make request of user it will fatch user from cookies
 
 module.exports = passport;
-
-
-
-
-// module.exports = passport;

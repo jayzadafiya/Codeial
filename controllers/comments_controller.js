@@ -10,7 +10,7 @@ module.exports.create = async function (req, res) {
                 user: req.user._id,
             });
 
-            await post.comments.push(comment);
+            post.comments.push(comment);
             await post.save(); // it will save data as the final version in the database
 
             res.redirect('/');

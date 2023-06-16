@@ -30,34 +30,26 @@ module.exports.signIn = function (req, res) {
 
 // get the sign up details
 module.exports.create = async function (req, res) {
-
-
-    if (req.body.password != req.body.confirm_password) {
+    if (req.body.password !== req.body.confirm_password) {
         return res.redirect('back');
     }
+
     try {
         const user = await User.findOne({ email: req.body.email });
-
-        try {
-
-            if (!user) {
-                await User.create(req.body);
-                // const newUser = await User.create(req.body);
-                // const save = newUser.save();
-                // return res.send(save)
-                return res.redirect("/users/sign-in");
-            } else {
-                return res.redirect("back");
-            }
-        } catch (err) {
-            console.log('error in creating user in signing up');
+        if (user) {
+            // User with the same email already exists
+            return res.redirect('back');
         }
 
-    } catch (err) {
-        console.log('error in finding user in signing up');
-    }
+        await User.create(req.body);
+        return res.redirect('/users/sign-in');
 
+    } catch (err) {
+        console.log('Error in creating user:', err);
+        return res.redirect('back');
+    }
 }
+
 
 module.exports.createSession = function (req, res) {
     return res.redirect('/');
