@@ -7,10 +7,24 @@ module.exports.profile = async function (req, res) {
     const user = await User.findById(req.params.id);
     return res.render('user_profile', {
         title: "user profile",
-        profile_user:user
+        profile_user: user
     });
 }
 
+module.exports.update = async function (req, res) {
+    try 
+    {
+        if (req.user.id == req.params.id) {
+            const user = await User.findByIdAndUpdate(req.params.id, req.body);
+            return res.redirect("back");
+        }else{
+            return res.status(401).send("Unauthorized");
+        }
+    } catch (err) {
+        console.log(err);
+    }
+
+}
 // render the sign up page
 module.exports.signUp = function (req, res) {
     if (req.isAuthenticated()) {
