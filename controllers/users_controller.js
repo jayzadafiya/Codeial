@@ -69,17 +69,20 @@ module.exports.create = async function (req, res) {
 
 
 module.exports.createSession = function (req, res) {
+    req.flash('success','Logged in Successfully')
     return res.redirect('/');
 
 }
 
 module.exports.destroySession = function (req, res) {
 
+    req.flash('success', 'You have Logged out')
     req.logout(function (err) {
         if (err) {
             // Handle any potential errors
             console.error(err);
         }
     })
+
     return res.redirect('/')
 }
