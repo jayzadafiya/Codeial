@@ -12,17 +12,49 @@ module.exports.profile = async function (req, res) {
 }
 
 module.exports.update = async function (req, res) {
-    try 
-    {
-        if (req.user.id == req.params.id) {
-            const user = await User.findByIdAndUpdate(req.params.id, req.body);
+    // try 
+    // {
+    //     if (req.user.id == req.params.id) {
+    //         const user = await User.findByIdAndUpdate(req.params.id, req.body);
+    //         return res.redirect("back");
+    //     }else{
+    //         return res.statu9s(401).send("Unauthorized");
+    //     }
+    // } catch (err) {
+    //     console.log(err);
+    // }
+
+    if (req.user.id == req.params.id) {
+        try {
+            const user = await User.findById(req.params.id);
+            User.uploadedAvatar(req,res,function(err){
+                if(err){
+                    console.log("Multer error ",err);
+                }
+                // console.log(req.file);//give all details of  file soruce name destination encrypttype etc
+                user.name=req.body.name;
+                user.email=req.body.email;
+                if(req.file){
+                    // this is savaing a path of the uploaded file into the avatar file in the user
+                    //avatarPath is static var declared inusr model 
+                    user.avatar=User.avatarPath+'/'+req.file.filename;
+                }
+                user.save();
+            });
+
             return res.redirect("back");
-        }else{
-            return res.status(401).send("Unauthorized");
+
+        } catch (err) {
+            console.log(err);
+            req.flash('error',err);
+            return res.redirect("back");
         }
-    } catch (err) {
-        console.log(err);
+    } else {
+        req.flash('error','Unauthorized')
+        return res.status(401).send("Unauthorized");
     }
+
+
 
 }
 // render the sign up page
@@ -69,7 +101,7 @@ module.exports.create = async function (req, res) {
 
 
 module.exports.createSession = function (req, res) {
-    req.flash('success','Logged in Successfully')
+    req.flash('success', 'Logged in Successfully')
     return res.redirect('/');
 
 }

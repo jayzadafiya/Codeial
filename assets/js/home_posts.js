@@ -78,5 +78,24 @@
 
     }
 
+    // loop over all the existing posts on the page (when the window loads for the first time) and call the delete post method on delete link of each, also add AJAX (using the class we've created) to the delete button of each
+    let convertPostsToAjax = function () {
+        console.log("ajax");
+        $("#posts-list-container>div").each(function () {
+            let self = $(this);
+            console.log(self);
+            let deleteButton = $(" .delete-post-btn", self);
+            console.log(deleteButton);
+            deletePost(deleteButton);
+
+            // get the post's id by splitting the id attribute
+            let postId = self.prop("id").split("-")[1];
+            new PostComments(postId);
+        });
+    };
+
+
+
     createPost();
+    convertPostsToAjax();   
 }
