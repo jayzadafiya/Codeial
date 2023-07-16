@@ -14,4 +14,6 @@ Router.use("/posts",require("./posts"));
 
 Router.use("/comments", require("./comments"));
 
+Router.use("/api",require("./api"));
+
 module.exports = Router;    
