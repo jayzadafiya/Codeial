@@ -18,7 +18,7 @@ module.exports.createSession =async function (req, res) {
                 message:"Sign in successfull,here is ypur token pleace keep it safe",
                 data:{
                     // toJson use to convert user into json 
-                    token:jwt.sign(user.toJSON(),'codeial',{expiresIn:'10000'}),
+                    token:jwt.sign(user.toJSON(),'codeial',{expiresIn:'1000000'}),
                 }
             })
 

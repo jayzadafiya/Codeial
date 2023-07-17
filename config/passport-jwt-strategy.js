@@ -9,27 +9,27 @@ const { ExtractJwt } = require("passport-jwt");
 
 let opts = {
     //header have set of key in which it have some bearer key set 
-    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken,
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     secretOrKey: "codeial"
 }
 
-passport.use(new JWTStrategy(opts, function (jwtPayLoad, done) {
+passport.use(
+    new JWTStrategy(opts, async (jwtPayload, done) => {
+        try {
+            // someone find out key and make fake token sowe are use here id
+            //id also can found by someone but if user details including token also is correct but id is not then user is not able to loging 
 
-    // someone find out key and make fake token sowe are use here id
-    //id also can found by someone but if user details including token also is correct but id is not then user is not able to loging 
-    User.findById(jwtPayLoad._id, function (err, user) {
-        if (err) {
-            console.log('error in finding jwt token');
-            return;
-        }
-
-        if (user) {
-            return done(null, user);
-        } else {
-            return done(null, false);
+            const user = await User.findById(jwtPayload._id);
+            if (user) {
+                return done(null, user);
+            } else {
+                return done(null, false);
+            }
+        } catch (error) {
+            return done(error, false);
         }
     })
+);
 
-}));
 
 module.exports = passport;
