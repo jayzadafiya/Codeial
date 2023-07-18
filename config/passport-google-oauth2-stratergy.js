@@ -1,13 +1,17 @@
 const passport = require('passport');
-const passportStratergy = require("passport-google-oauth").OAuth2Strategy;
+const googleStrategy = require("passport-google-oauth").OAuth2Strategy;
 const crypto = require("crypto");
 const User = require("../models/user");
 
 
 //tell passport to use new stratrgy for goole login
 passport.use(new googleStrategy({
-   
+    clientID: "672098762359-0evlr6vod6qp88f4djkeoghniguapu0d.apps.googleusercontent.com",
+    clientSecret: "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",
+    callbackURL: "http://localhost:8000/users/auth/google/callback",
+
     },
+    // accessToken is provide by google for authentication and refeshToken is generent when accessToken is expired
    async function(accessToken,refeshToken,profile,done){
     //    await User.fineOne({emial:profile.emails[0].value}).exac(function(err,user){
         //     if(err){

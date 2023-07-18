@@ -21,4 +21,10 @@ router.get('/sign-out',usersController.destroySession)
 // if authenticayion is done them it will call createSession page
 // but if it is not done then redirect to sign in page 
 
+//scope is data which we need to fatch
+router.get('/auth/google',passport.authenticate('google',{scope:['profile','email']}));
+router.get("/auth/google/callback",passport.authenticate('google',{failureRedirect:'/users/sign-in'}),usersController.createSession);
+
+
+
 module.exports = router;    
