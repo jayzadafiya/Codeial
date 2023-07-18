@@ -1,22 +1,53 @@
 const Comment = require("../models/comments");
 const Post = require("../models/post");
+const commentsMailer = require("../mailers/comments_mailer");
+
 module.exports.create = async function (req, res) {
     try {
         const post = await Post.findById(req.body.post);
+        // if (post) {
+        //     const comment = await Comment.create({
+        //         content: req.body.content,
+        //         post: req.body.post,
+        //         user: req.user._id,
+        //     });
+
+        //     post.comments.push(comment);
+        //     await post.save(); // it will save data as the final version in the database
+
+        //     res.redirect('/');
+        // }
         if (post) {
-            const comment = await Comment.create({
+            let comment = await Comment.create({
                 content: req.body.content,
                 post: req.body.post,
-                user: req.user._id,
+                user: req.user._id
             });
 
             post.comments.push(comment);
-            await post.save(); // it will save data as the final version in the database
+            post.save();
+
+            comment = await comment.populate('user', 'name email');
+            commentsMailer.newComment(comment);
+            if (req.xhr) {
+
+
+                return res.status(200).json({
+                    data: {
+                        comment: comment
+                    },
+                    message: "Post created!"
+                });
+            }
+
+
+            req.flash('success', 'Comment published!');
 
             res.redirect('/');
         }
     } catch (err) {
         console.log(err);
+        req.flash('error', err);
     }
 }
 
@@ -28,10 +59,24 @@ module.exports.destroy = async function (req, res) {
             let postID = comment.post;
             await comment.deleteOne();
             const post = await Post.findByIdAndUpdate(postID, { $pull: { comments: req.params.id } })
+            // send the comment id which was deleted back to the views
+            if (req.xhr) {
+                return res.status(200).json({
+                    data: {
+                        comment_id: req.params.id
+                    },
+                    message: "Post deleted"
+                });
+            }
+
         }
-        return res.redirect("back");
+
+        req.flash('success', 'Comment deleted!');
+
+        return res.redirect('back');
     } catch (err) {
-        console.log("error in deleting comment " ,err );
+        console.log("error in deleting comment ", err);
+        req.flash('error', err);
         return res.redirect("back");
     }
 }
