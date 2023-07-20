@@ -1,20 +1,28 @@
 const mongoose = require('mongoose');
-const commentSchema = mongoose.Schema({
-    content:{
+
+
+const commentSchema = new mongoose.Schema({
+    content: {
         type: String,
-        required:true 
+        required: true
     },
-    // comment belong to user 
-    user:{
+    // comment belongs to a user
+    user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref:'User' 
+        ref: 'User'
     },
-    post:{
+    post: {
         type: mongoose.Schema.Types.ObjectId,
-        ref:'Post' 
+        ref: 'Post'
     },
-},{
-timestamps:true
+    likes: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Like'
+        }
+    ]
+}, {
+    timestamps: true
 });
 
 const Comment = mongoose.model('Comment', commentSchema);

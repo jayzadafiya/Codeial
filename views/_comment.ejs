@@ -1,4 +1,4 @@
-<li>
+<li id="comment-<%= comment._id  %>">
     <p>
         <% if(locals.user&& locals.user.id==comment.user.id){ %>
             <small>
@@ -9,6 +9,18 @@
                     <br>
                     <small>
                         <%= comment.user.name %>
+                    </small>
+                    <!-- display the likes of this post , if the user is looged in ,then show the like ,else jus tshow the count -->
+                    <br>
+                    <small>
+                        <% if (locals.user){ %>
+                            <a class="toggle-like-button" data-likes="<%= comment.likes.length %>"
+                                href="/likes/toggle/?id=<%=comment._id%>&type=Comment">
+                                <%= comment.likes.length %> Likes
+                            </a>
+                            <% }else{ %>
+                                <%= comment.likes.length %> Likes
+                                    <% } %>
                     </small>
     </p>
 </li>

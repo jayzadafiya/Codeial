@@ -11,10 +11,16 @@
                 data: newPostForm.serialize(),
                 success: function (data) {
                     // console.log(data);
-                    let newPost  =newPostDom(data.data.post);
+                    let newPost = newPostDom(data.data.post);
                     // prepend add item to first of list
                     $('#posts-list-container>ul').prepend(newPost);
-                    deletePost($(' .delete-post-button',newPost))
+                    deletePost($(' .delete-post-button', newPost))
+
+                    // call the create comment class
+                    new PostComments(data.data.post._id);
+
+                    // enable the functionality of the toggle like button on the new post
+                    new ToggleLike($(' .toggle-like-button', newPost));
                 },
                 error: function (err) {
                     console.log(err.responseText);
@@ -37,7 +43,13 @@
                     <br>
                     <small>
                         <!-- <%= post.user %> -->
-                        ${ post.user.name}
+                        ${post.user.name}
+                    </small>
+                    <br>
+                    <small>
+                        <a class="toggle-like-button"data-likes="0" href="/likes/toggle/?id=${post._id}&type=Post">
+                            0 Likes
+                        </a>
                     </small>
     </p>
     <div class=" post-comments">
@@ -60,17 +72,17 @@
     }
 
     // method to  delete post 
-    let deletePost=function(deleteLink){
+    let deletePost = function (deleteLink) {
         $(deleteLink).click(function (e) {
             e.preventDefault();
 
             $.ajax({
                 type: "get",
                 url: (deleteLink).prop('href'), //give value of href 
-                success:function(data){
+                success: function (data) {
                     $(`#post-${data.data.post_id}`).remove();
                 },
-                error:function(err){
+                error: function (err) {
                     console.log(err.responseText);
                 }
             })
@@ -97,5 +109,5 @@
 
 
     createPost();
-    convertPostsToAjax();   
+    convertPostsToAjax();
 }
