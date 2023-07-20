@@ -1,6 +1,7 @@
 const express = require("express");
 const Router = express.Router();
 const homeController  =require("../controllers/home_controller");
+const MessageController=require("../controllers/message_controller");
 
 console.log("router loaded");
 
@@ -18,4 +19,5 @@ Router.use("/likes",require('./likes'))
 
 Router.use("/api",require("./api"));
 
+Router.get('/api/messages', MessageController.displayMessages);
 module.exports = Router;    
